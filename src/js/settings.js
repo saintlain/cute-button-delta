@@ -1,12 +1,20 @@
 'use strict';
 
-const settings = {}, elems = {};
+const settings = {},
+  elems = {};
 let folders;
+let hotkey = {
+  ctrlKey: false,
+  altKey: false,
+  shiftKey: false,
+  metaKey: false,
+  key: ' '
+};
 
 /*
 -------------------- Localization --------------------
 */
-function i18n(){
+function i18n() {
   document.querySelectorAll('i18n').forEach(
     elem => elem.textContent = chrome.i18n.getMessage(elem.textContent)
   );
@@ -21,51 +29,57 @@ function i18n(){
 /*
 -------------------- Generic functions --------------------
 */
-function loadOptions(){
+function loadOptions() {
   chrome.storage.local.get(settingsDefault, result => {
     setOptionsValues(result);
     additionalOptionsProcessing(result);
+    hotkeyDecode(result.saveHotkey || hotkey);
     saveOptions();
   });
 }
 
-function saveOptions(){
+function saveOptions() {
   const newSettings = {};
   prepareCurrentFoldersForSave();
+  prepareCurrentHotkeyForSave();
   prepareCss();
   Object.keys(settingsDefault).forEach(optionName => newSettings[optionName] = getValue(optionName));
   newSettings.folders = folders;
+  newSettings.saveHotkey = hotkey;
   chrome.storage.local.set(newSettings);
   disableSave();
 }
 
-function resetOptions(){
+function resetOptions() {
   setOptionsValues(settingsDefault);
   additionalOptionsProcessing(settingsDefault);
+  hotkeyDecode(settingsDefault.saveHotkey);
   enableSave();
 }
 
-function setOptionsValues(optionsValues){
-  Object.keys(settingsDefault).forEach(optionName => setValue(optionName, optionsValues[optionName]));
+function setOptionsValues(optionsValues) {
+  Object.keys(settingsDefault).forEach(optionName => {
+    setValue(optionName, optionsValues[optionName]);
+  });
 }
 
-function getValue(optionName){
+function getValue(optionName) {
   return settings[optionName][settings[optionName].dataset.valueLocation];
 }
 
-function setValue(optionName, optionValue){
+function setValue(optionName, optionValue) {
   settings[optionName][settings[optionName].dataset.valueLocation] = optionValue;
 }
 
-function disableSave(){
+function disableSave() {
   elems['save'].disabled = true;
 }
 
-function enableSave(){
+function enableSave() {
   elems['save'].disabled = false;
 }
 
-function showMessage(message, type){
+function showMessage(message, type) {
   elems['message'].textContent = message;
   elems['message'].classList.add(type);
   setTimeout(() => {
@@ -74,33 +88,35 @@ function showMessage(message, type){
   }, 3000);
 }
 
-function additionalOptionsProcessing(options){
+function additionalOptionsProcessing(options) {
   refreshIcon();
   refreshFolders(options.folders);
 }
 
-function show(elemName){
+function show(elemName) {
   elems[elemName].classList.remove('hidden-block');
 }
-function hide(elemName){
+
+function hide(elemName) {
   elems[elemName].classList.add('hidden-block');
 }
-function toggle(elem){
+
+function toggle(elem) {
   elem.classList.toggle('hidden-block');
 }
 
 /*
 -------------------- Icon --------------------
 */
-function refreshIcon(){
+function refreshIcon() {
   elems['de-cute-id'].style.backgroundImage = settings['icon'].value;
 }
 
-function fileInputListener(){
+function fileInputListener() {
   const reader = new FileReader();
   reader.readAsDataURL(elems['file-input'].files[0]);
-  reader.onload = function(){
-    if (reader.result.length > 2097152) {
+  reader.onload = function() {
+    if(reader.result.length > 2097152) {
       showMessage('File is too big (~2MB maximum).', 'error');
       return;
     }
@@ -112,76 +128,85 @@ function fileInputListener(){
 /*
 -------------------- Custom Directories --------------------
 */
-function refreshFolders(foldersSettings){
+function refreshFolders(foldersSettings) {
   document.querySelectorAll('.folder').forEach(folderElem => folderElem.remove());
   folders = foldersSettings;
   folders.forEach(addNewFolder);
-  if (folders.length > 0) {
+  if(folders.length > 0)
     show('folders-table-headers');
-  }
 }
 
-function prepareCurrentFoldersForSave(){
+function prepareCurrentFoldersForSave() {
   const currentFoldersList = [];
   document.querySelectorAll('.folder').forEach(folderElem => {
     const folderSettings = buildFolderSettings(folderElem);
-    if ((!folderSettings.key || !folderSettings.keyCode) && !folderSettings.mouseButton && !folderSettings.domain) {return;}
+    if((!folderSettings.key || !folderSettings.keyCode) && !folderSettings.mouseButton && !folderSettings.domain)
+      return;
     currentFoldersList.push(folderSettings);
   });
   folders = currentFoldersList;
 }
 
-function addNewFolder(folderSettings = null){
+function prepareCurrentHotkeyForSave() {
+  const currentHotkey = {
+    ...hotkey
+  };
+  hotkey = currentHotkey;
+}
+
+function addNewFolder(folderSettings = null) {
   const newFolder = elems['blank-folder'].cloneNode(true);
 
   newFolder.removeAttribute('id');
   newFolder.querySelector('.key').addEventListener('keyup', keyInputListener);
   newFolder.querySelector('.delete-folder').addEventListener('click', deleteFolder);
   enableInputListeners(newFolder);
-  if (folderSettings) {
+  if(folderSettings)
     fillFolder(newFolder, folderSettings);
-  }
   elems['add-folder-container'].parentNode.insertBefore(newFolder, elems['add-folder-container']);
   show('folders-table-headers');
 }
 
-function deleteFolder(event){
+function deleteFolder(event) {
   event.target.parentNode.parentNode.remove();
   enableSave();
 }
 
-function keyInputListener(event){
-  if (event.key !== event.target.value) {return;}
+function keyInputListener(event) {
+  if(event.key !== event.target.value)
+    return;
   event.target.parentNode.querySelector('.keyCode').value = event.keyCode;
 }
 
-function fillFolder(folderElem, folderSettings){
-  folderElem.querySelector('.domain').value       = folderSettings.domain;
-  folderElem.querySelector('.key').value          = folderSettings.key;
-  folderElem.querySelector('.keyCode').value      = folderSettings.keyCode;
-  folderElem.querySelector('.modifier').value     = folderSettings.modifier;
-  folderElem.querySelector('.mouseButton').value  = folderSettings.mouseButton;
-  folderElem.querySelector('.path').value         = folderSettings.path;
-  folderElem.querySelector('.filename').value     = folderSettings.filename;
+function fillFolder(folderElem, folderSettings) {
+  folderElem.querySelector('.domain').value = folderSettings.domain;
+  folderElem.querySelector('.key').value = folderSettings.key;
+  folderElem.querySelector('.keyCode').value = folderSettings.keyCode;
+  folderElem.querySelector('.modifier').value = folderSettings.modifier;
+  folderElem.querySelector('.mouseButton').value = folderSettings.mouseButton;
+  folderElem.querySelector('.path').value = folderSettings.path;
+  folderElem.querySelector('.filename').value = folderSettings.filename;
 }
 
-function buildFolderSettings(folderElem){
+function buildFolderSettings(folderElem) {
   const folderSettings = {
-    domain      : folderElem.querySelector('.domain').value,
-    key         : folderElem.querySelector('.key').value,
-    keyCode     : Number(folderElem.querySelector('.keyCode').value),
-    modifier    : folderElem.querySelector('.modifier').value,
-    mouseButton : folderElem.querySelector('.mouseButton').value,
-    path        : folderElem.querySelector('.path').value,
-    filename    : folderElem.querySelector('.filename').value,
+    domain: folderElem.querySelector('.domain').value,
+    key: folderElem.querySelector('.key').value,
+    keyCode: Number(folderElem.querySelector('.keyCode').value),
+    modifier: folderElem.querySelector('.modifier').value,
+    mouseButton: folderElem.querySelector('.mouseButton').value,
+    path: folderElem.querySelector('.path').value,
+    filename: folderElem.querySelector('.filename').value,
   };
   addHotkeyId(folderSettings);
 
   return folderSettings;
 }
 
-function addHotkeyId(folder){
-  const pseudoEvent = {keyCode: folder.keyCode};
+function addHotkeyId(folder) {
+  const pseudoEvent = {
+    keyCode: folder.keyCode
+  };
   pseudoEvent[folder.modifier] = true;
   folder.id = `${pseudoEvent.ctrlKey ? 1 : 0}${pseudoEvent.altKey ? 1 : 0}${pseudoEvent.shiftKey ? 1 : 0}${pseudoEvent.keyCode || '00'}`;
 }
@@ -190,17 +215,17 @@ function addHotkeyId(folder){
 -------------------- Save path --------------------
 */
 
-function allSavePathsAreValid(){
+function allSavePathsAreValid() {
   return !document.querySelector('.invalid-path');
 }
 
-function checkSavePath(pathElem){
+function checkSavePath(pathElem) {
   const isValid = isValidPath(pathElem.value);
   pathElem.classList.toggle('invalid-path', !isValid);
   return isValid;
 }
 
-function isValidPath(path){
+function isValidPath(path) {
   return !/^(\s*([A-Z]:)|(\\)|(\/))/i.test(path);
 }
 
@@ -208,17 +233,25 @@ function isValidPath(path){
 -------------------- Custom styles --------------------
 */
 
-function setExampleCss(){
+function setExampleCss() {
   setValue('styleForSaveMark', 'opacity: 0.4 !important;');
   enableSave();
 }
 
-function prepareCss(){
+
+function setExampleCssClass() {
+  setValue('classesForSaveMark', '.custom-class .other-class');
+  enableSave();
+}
+
+function prepareCss() {
   const cssInputValue = getValue('styleForSaveMark').trim(),
     declarations = cssInputValue && cssInputValue.split(';'),
     preparedDeclarations = [];
 
-  if (!declarations) {return;}
+  if(!declarations)
+    return;
+
   declarations.forEach(declaration => {
     declaration && preparedDeclarations.push(declaration.replace(/( !important)? *$/, ' !important').trim());
   });
@@ -229,7 +262,7 @@ function prepareCss(){
 /*
 -------------------- Initialization --------------------
 */
-function initSelectors(){
+function initSelectors() {
   const settingsElems = Object.keys(settingsDefault),
     otherElems = [
       'blank-folder',
@@ -241,8 +274,8 @@ function initSelectors(){
       'reset',
       'file-input',
       'message',
-      'save-mark-example',
       'de-cute-id',
+      'saveHotkeyDisplay'
     ];
 
   settingsElems.forEach(name => {
@@ -254,23 +287,69 @@ function initSelectors(){
   });
 }
 
-function enableInputListeners(inputsContainer){
+function enableInputListeners(inputsContainer) {
   inputsContainer.querySelectorAll('select, input, textarea').forEach(editableElem => {
     editableElem.addEventListener('input', event => {
       enableSave();
-      if (!event.target.classList.contains('path')) {return;}
+      if(!event.target.classList.contains('path'))
+        return;
       checkSavePath(event.target);
     });
   });
 }
 
-function enableToggles(){
+function enableToggles() {
   document.querySelectorAll('.toggle').forEach(toggleSwitch => {
     toggleSwitch.addEventListener('click', () => toggle(toggleSwitch.nextElementSibling));
   });
 }
 
-function init(){
+function resizeAdditionalCssControl() {
+  let el = settings['additionalCss'],
+    val = el.value || el.placeholder;
+  el.setAttribute('rows', `${val.split(/\r\n|\r|\n/).length - 1}`);
+}
+
+function hotkeyDecode(e) {
+  let special = {
+      ' ': '␣',
+      'CapsLock': '⇪',
+      'Tab': '↹',
+      'Backspace': '⌫',
+      'Escape': '⎋',
+      'Enter': '↵',
+      'ArrowLeft': '←',
+      'ArrowUp': '↑',
+      'ArrowRight': '→',
+      'ArrowDown': '↓',
+    },
+    mods = {
+      'Control': '^',
+      'Alt': '⌥',
+      'Meta': '⌘',
+      'Shift': '⇧',
+    },
+    props = {
+      ctrlKey: 'Control',
+      altKey: 'Alt',
+      metaKey: 'Meta',
+      shiftKey: 'Shift',
+      key: (mods[e.key] && '') ?? (special[e.key] || e.key.toUpperCase())
+    },
+    saveVal = {},
+    displayVal = `${e.ctrlKey ? mods.Control : ''}${e.altKey ? mods.Alt : ''}${e.metaKey ? mods.Meta : ''}${e.shiftKey ? mods.Shift : ''}${e.key && !mods[e.key] ? special[e.key] || e.key.toUpperCase() : ''}`;
+  for(const [key, val] of Object.entries(props))
+    saveVal[key] = e[key];
+
+  hotkey = saveVal;
+  settings['saveHotkey'].value = hotkey;
+  elems['saveHotkeyDisplay'].value = displayVal;
+  if(e.preventDefault)
+    e.preventDefault();
+  return displayVal;
+}
+
+function init() {
   const messages = {
     success: chrome.i18n.getMessage('settings_messageSuccess'),
     invalidPath: chrome.i18n.getMessage('settings_messageInvalidPath'),
@@ -279,11 +358,10 @@ function init(){
   i18n();
   initSelectors();
 
-  elems['save-mark-example'].addEventListener('click', setExampleCss);
   elems['file-input'].addEventListener('change', fileInputListener);
   elems['reset'].addEventListener('click', resetOptions);
   elems['save'].addEventListener('click', event => {
-    if (allSavePathsAreValid()) {
+    if(allSavePathsAreValid()) {
       saveOptions();
       showMessage(messages.success);
     } else {
@@ -296,10 +374,16 @@ function init(){
     enableSave();
   });
 
+  elems['saveHotkeyDisplay'].addEventListener('keydown', event => {
+    hotkeyDecode(event);
+    enableSave();
+  });
+  
   enableToggles();
   enableInputListeners(document);
   disableSave();
   loadOptions();
+  resizeAdditionalCssControl();
 }
 
 document.addEventListener('DOMContentLoaded', init);

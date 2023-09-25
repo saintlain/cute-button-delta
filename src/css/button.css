@@ -1,29 +1,26 @@
 html de_cbutton#de-cute-id {
-	background-image: url(moz-extension://__MSG_@@extension_id__/bestgirl.png);
+	background-image: url(moz-extension://__MSG_@@extension_id__/img/bestgirl-96.png);
 	background-position: center 	!important;
 	background-repeat: no-repeat 	!important;
-	background-color: #444 			!important;
-	background-size: 28px 28px 		!important;
+	background-color: #ffe   !important;
 	pointer-events: auto			!important;
-	border-radius: 4px 				!important;
+	border-radius: 3px 				!important;
 	visibility: hidden 				!important;
 	position: absolute 				!important;
 	display: block 					!important;
 	z-index: 2147483647 			!important;
 	padding: 0 						!important;
 	margin: 0 						!important;
-	border: 1px solid #777 			!important;
+	border: 3px solid #fbc 	   !important;
 	cursor: default 				!important;
-	min-height: 32px 				!important;
-	min-width: 32px 				!important;
-	height: 32px 					!important;
-	width: 32px 					!important;
+	transition: opacity 0.05s;
+	opacity: 0.7;
 }
 html de_cbutton#de-cute-id.visible {
 	visibility: visible !important;
 }
 html de_cbutton#de-cute-id:hover {
-	background-color: #666 !important;
+	opacity: 1;	
 }
 html de_cbutton#de-cute-id.implying-click,
 html de_cbutton#de-cute-id.click:hover {

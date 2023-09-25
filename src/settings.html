@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/settings.css">
+  </head>
+  <body>
+    <table id="main">
+      <tr id="path-restrictions" class="alarm">
+        <td colspan="2">
+          <span id="toggle-basic-rules" class="toggle"> &#9654; Show/hide rules </span>
+          <span id="basic-rules" class="hidden-block">
+            <br>
+            <i18n>settings_pathRestrictions_1</i18n>
+            <br>
+            <i18n>settings_pathRestrictions_2</i18n>
+            <br>
+            <i18n>settings_pathRestrictions_3</i18n>
+            <br>
+            <br>
+            <i18n>settings_pathRestrictions_4</i18n>
+            <br>
+            <i18n>settings_pathRestrictions_5</i18n>
+            <br>
+          </span>
+          <br>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="defaultSavePath">
+            <i18n>settings_defaultSavePath</i18n>
+          </label>
+        </td>
+        <td>
+          <input id="defaultSavePath" data-i18n-placeholder="settings_defaultSavePathPlaceholder">
+        </td>
+      </tr>
+      <tr>
+        <td id="folders-container" colspan="2">
+          <table id="folders-table">
+            <tr id="folders-table-headers" class="hidden-block">
+              <th>
+                <i18n>settings_folders_domain</i18n>
+              </th>
+              <th width="60px">
+                <i18n>settings_folders_modifier</i18n>
+              </th>
+              <th width="60px">
+                <i18n>settings_folders_hotkey</i18n>
+              </th>
+              <th width="60px">
+                <i18n>settings_folders_mouseButton</i18n>
+              </th>
+              <th>
+                <i18n>settings_folders_path</i18n>
+              </th>
+              <th>
+                <i18n>settings_folders_filename</i18n>
+              </th>
+              <th width="24px"></th>
+            </tr>
+            <tr class="folder" id="blank-folder">
+              <td>
+                <label>
+                  <input class="domain" placeholder="wikipedia.org">
+                </label>
+              </td>
+              <td>
+                <label>
+                  <select class="modifier" required>
+                    <option value="" selected>n/a</option>
+                    <option value="ctrlKey">ctrl</option>
+                    <option value="shiftKey">shift</option>
+                    <option value="altKey">alt</option>
+                  </select>
+                </label>
+              </td>
+              <td>
+                <label>
+                  <input class="key" size="1" maxlength="1" placeholder="n/a" value="">
+                  <input class="keyCode" type="hidden">
+                </label>
+              </td>
+              <td>
+                <label>
+                  <select class="mouseButton" required>
+                    <option value="" selected>n/a</option>
+                    <option value="0">left</option>
+                    <option value="2">right</option>
+                    <option value="1">mid</option>
+                    <option value="ANY">any</option>
+                  </select>
+                </label>
+              </td>
+              <td>
+                <label>
+                  <input class="path" placeholder="/cute/::domain::/">
+                </label>
+              </td>
+              <td>
+                <label>
+                  <input class="filename" placeholder="::filename:: ::time::">
+                </label>
+              </td>
+              <td>
+                <a class="button delete-folder">✖</a>
+              </td>
+            </tr>
+            <tr id="add-folder-container">
+              <td colspan="7">
+                <button id="add-folder" class="button">
+                  <i18n>settings_addFolder</i18n>
+                </button>
+              </td>
+            </tr>
+          </table>
+          <span id="toggle-folders-rules" class="toggle"> &#9654; <i18n>settings_howToUse</i18n>
+          </span>
+          <div id="folders-rules" class="hidden-block">
+            <div class="output">
+              <h3>Output</h3>
+              <i18n>settings_foldersRules_1</i18n>
+              <h4>Available placeholders</h4>
+              <div class="placeholders">
+                <div class="folders-templates-list">::domain:: ::title:: ::board_code:: ::thread_number:: ::datetime:: ::date:: ::time:: ::filename:: ::original_filename:: ::both_filenames:: </div>
+                <span class="folders-templates-list">
+                  <i18n>settings_placeholdersList</i18n>
+                </span>
+              </div>
+            </div>
+            <div class="control">
+              <h3>Control</h3>
+              <i18n>settings_foldersRules_2</i18n>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="minSize">
+            <i18n>settings_minSize</i18n>
+          </label>
+        </td>
+        <td>
+          <input id="minSize" type="number" min="0">px
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="exclusions">
+            <i18n>settings_exclusions</i18n>
+          </label>
+        </td>
+        <td>
+          <textarea id="exclusions"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="domainExclusions">
+            <i18n>settings_domainExclusions</i18n>
+          </label>
+        </td>
+        <td>
+          <textarea id="domainExclusions"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="classesForSaveMark">
+            <i18n>settings_classesForSaveMark</i18n>
+          </label>
+        </td>
+        <td>
+          <input id="classesForSaveMark" data-i18n-placeholder="settings_classesForSaveMarkPlaceholder">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="additionalCss">
+            <i18n>settings_additionalCss</i18n>
+          </label>
+        </td>
+        <td>
+          <textarea id="additionalCss" data-i18n-placeholder="settings_additionalCssPlaceholder"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="styleForSaveMark">
+            <i18n>settings_styleForSaveMark</i18n>
+          </label>
+        </td>
+        <td>
+          <input id="styleForSaveMark" data-i18n-placeholder="settings_styleForSaveMarkPlaceholder">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="showSaveDialog">
+            <i18n>settings_showSaveDialog</i18n>
+          </label>
+        </td>
+        <td>
+          <input id="showSaveDialog" type="checkbox">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label>
+            <i18n>settings_saveHotkey</i18n>
+          </label>
+        </td>
+        <td>
+          <label for="enableSaveHotkey">
+            <i18n>settings_enableSaveHotkey</i18n>
+            <input class="less-wide" id="enableSaveHotkey" type="checkbox">
+          </label>
+          <label for="saveHotkeyDisplay">
+            <i18n>settings_saveHotkeyDisplay</i18n>
+            <input class="less-wide" id="saveHotkeyDisplay">
+          </label>
+          <input id="saveHotkey" style="display:none">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="originalNameByDefault">
+            <i18n>settings_originalNameByDefault</i18n>
+          </label>
+        </td>
+        <td>
+          <input id="originalNameByDefault" type="checkbox">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="saveFullSized">
+            <i18n>settings_saveFullSized</i18n>
+          </label>
+        </td>
+        <td>
+          <input id="saveFullSized" type="checkbox">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="checkByRealImageSize">
+            <i18n>settings_checkByRealImageSize</i18n>
+          </label>
+        </td>
+        <td>
+          <input id="checkByRealImageSize" type="checkbox">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="saveOnHover">
+            <i18n>settings_saveOnHover</i18n>
+          </label>
+        </td>
+        <td>
+          <input id="saveOnHover" type="checkbox">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="forbidDuplicateFiles">
+            <i18n>settings_forbidDuplicateFiles</i18n>
+          </label>
+        </td>
+        <td>
+          <input id="forbidDuplicateFiles" type="checkbox">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="hideButton">
+            <i18n>settings_hideButton</i18n>
+          </label>
+        </td>
+        <td>
+          <input id="hideButton" type="checkbox">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="position">
+            <i18n>settings_position</i18n>
+          </label>
+        </td>
+        <td>
+          <select id="position">
+            <option value="top-left" data-i18n="settings_positionTopLeft"></option>
+            <option value="top-right" data-i18n="settings_positionTopRight"></option>
+            <option value="bottom-left" data-i18n="settings_positionBottomLeft"></option>
+            <option value="bottom-right" data-i18n="settings_positionBottomRight"></option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="placeUnderCursor">
+            <i18n>settings_placeUnderCursor</i18n> ( <span class="alarm">
+              <i18n>settings_placeUnderCursorWarning</i18n>
+            </span>):
+          </label>
+        </td>
+        <td>
+          <input id="placeUnderCursor" type="checkbox">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label>
+            <i18n>settings_offsets</i18n>
+          </label>
+        </td>
+        <td>
+          <label>
+            <i18n>settings_offsetVertical</i18n>
+            <input id="verticalOffset" class="offset" type="number" min="0">px
+          </label>
+          <br>
+          <label>
+            <i18n>settings_offsetHorizontal</i18n>
+            <input id="horizontalOffset" class="offset" type="number" min="0">px
+          </label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label>
+            <i18n>settings_btnSize</i18n>
+          </label>
+        </td>
+        <td>
+          <input id="btnSize" class="offset" type="number" min="20">px </label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="file-input">
+            <i18n>settings_icon</i18n>
+          </label>
+        </td>
+        <td>
+          <div id="icon-container">
+            <de_cbutton id="de-cute-id" class="visible"></de_cbutton>
+          </div>
+          <input id="icon" type="hidden">
+          <input id="file-input" type="file">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button id="save">
+            <i18n>settings_save</i18n>
+          </button>
+          <button id="reset">
+            <i18n>settings_reset</i18n>
+          </button>
+        </td>
+        <td id="message"></td>
+      </tr>
+      <tr id="hidden-settings">
+        <td>
+          <input id="isCute" type="hidden">
+          <input id="folders" type="hidden">
+        </td>
+      </tr>
+    </table>
+    <script src="js/settings-default.js"></script>
+    <script src="js/settings.js"></script>
+  </body>
+</html>

@@ -1,0 +1,159 @@
+table#main {
+  border-collapse: collapse;
+  border: 1px solid grey;
+  width: 100%;
+}
+de_cbutton#de-cute-id {
+	background-image: url(moz-extension://__MSG_@@extension_id__/img/bestgirl-96.png);
+	background-position: center 	!important;
+	background-repeat: no-repeat 	!important;
+	background-color: #ffe   !important;
+  display: block !important;
+	pointer-events: auto			!important;
+	border-radius: 3px 				!important;
+	visibility: visible 				!important;
+	z-index: 2147483647 			!important;
+	padding: 0 						!important;
+	margin: 0 						!important;
+	border: 3px solid #fbc 	   !important;
+	cursor: default 				!important;
+	background-size: 58px 58px !important;
+    min-height: 64px!important;
+    min-width: 64px!important;
+    height: 64!important;
+    width: 64!important;
+}
+table#main>tbody>tr:not(#path-restrictions):not(.folder)>td {
+  border-bottom: 1px solid grey;
+}
+table#main>tbody>tr>td:first-child {
+  max-width: 250px;
+  padding: 6px 10px;
+  height: 25px;
+}
+table#main td#folders-container {
+  padding-right: 0;
+  padding-left: 0;
+}
+.toggle {
+  font-weight: bold;
+  margin-left: 20px;
+  cursor: pointer;
+}
+.alarm {
+  color: #d66;
+}
+.error {
+  color: red;
+}
+.invalid-path {
+  border: 2px solid red;
+}
+#icon-container {
+  vertical-align: bottom;
+  display: inline-block;
+}
+#folders-rules {
+  white-space: pre-line;
+  padding: 0px 10px;
+}
+.folders-templates-list {
+  display: inline-block;
+  margin: 4px 10px 0 0;
+}
+th {
+  text-align: left !important;
+}
+#folders-table {
+  table-layout: fixed;
+  width: 100%;
+}
+#folders-table-headers {
+  text-align: left;
+}
+.folder {
+  height: 25px;
+}
+.folder>td {
+  text-align: center;
+}
+.folder td:first-child {
+  vertical-align: middle;
+  line-height: 23px;
+}
+input.key:not(:placeholder-shown) {
+  text-transform: uppercase;
+}
+input.key:placeholder-shown {
+  text-transform: lowercase;
+}
+.folder .delete-folder {
+  text-align: center;
+  font-size: 14px;
+  display: inline-block;
+  padding-top: 3px;
+  width: 20px !important;
+}
+.folder select:required:invalid,
+.folder input:placeholder-shown {
+  background-color: #f5f5f5;
+}
+.folder#blank-folder,
+#hidden-settings,
+.hidden-block {
+  display: none;
+}
+#add-folder-container td {
+  padding: 6px 0 13px 20px;
+}
+input.less-wide {
+  width: 15% !important;
+  font-weight: bolder;
+}
+input[type="number"] {
+  margin-right: 3px;
+  width: 50px !important;
+}
+input.offset {
+  margin-left: 10px;
+}
+input,
+textarea,
+select {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  width: 98% !important;
+}
+.button {
+  background-color: whitesmoke;
+  border: 1px solid grey;
+  cursor: pointer;
+}
+.button:hover {
+  background-color: white;
+}
+h3 {
+  border-bottom: 2px solid black;
+  margin-top: 0;
+}
+h3,
+h4,
+h5 {
+  padding: 0px 0;
+  margin: 15px 0 6px 0;
+}
+.placeholders {
+  background: #eee;
+  display: flex;
+  padding: 12px;
+}
+.output {
+  margin-top: -20px;
+}
+.control {
+  white-space: pre;
+}
+body {
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}

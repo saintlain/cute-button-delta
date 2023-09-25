@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Cute Save Button Ⲇ",
-  "version": "23.9.25",
+  "version": "23.9.26",
   "description": "Ⲇ is a Cute Save Button fork with additional features. Praise cute!",
   "default_locale": "en",
   "icons": {
@@ -39,7 +39,7 @@
     "img/bestgirl-96.png"
   ],
   "options_ui": {
-    "open_in_tab": true,
+    "open_in_tab": false,
     "page": "settings.html"
   },
   "browser_action": {
